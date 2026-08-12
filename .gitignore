@@ -3,3 +3,4 @@ wxWidgets/*
 WinSparkle/*
 !WinSparkle/download.txt
 .vs
+build/
