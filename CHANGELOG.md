@@ -24,6 +24,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   discarding it (the GUI polled continuously and never noticed).
 * Added `baselines/` — per-version reference outputs from `scfusion-cli`
   for sanity-checking balance-data changes.
+* The full GUI now builds and runs on Linux (`scfusion-gui`, built
+  automatically when wxGTK is installed): WinSparkle and Win32 priority
+  calls are Windows-only via `#ifdef`, colors follow the OS light/dark
+  theme (with paired accent palettes for the output grid and Gantt
+  chart), and `Versions/` is found relative to the executable as well as
+  the working directory.
+* GitHub Actions CI: Linux build + per-race GA smoke test, and a Windows
+  MSBuild compile check of the Visual Studio project against the official
+  wxWidgets 3.1.7 binaries (`wxWidgets/wxwidgets.props` is now committed).
 
 ### Upgrade for [Patch v5.0.16](https://news.blizzard.com/en-us/article/24245740/starcraft-ii-5-0-16-patch-notes)
 

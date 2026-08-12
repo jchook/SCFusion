@@ -13,9 +13,16 @@ Super Fusion (SCFusion) is a Windows desktop application that finds optimal Star
 ```sh
 cmake -B build -S . && cmake --build build -j
 ./build/scfusion-cli --versions-dir main/Versions --time-limit 30 baselines/targets/protoss-2gate-stalkers.xml
+./build/scfusion-gui   # only built when the full wxWidgets (wxGTK) is installed
 ```
 
 Builds `scfusion-core` (Core+GA+SC2, linked against wxBase/wxXml only — no GUI libs) and `scfusion-cli` (`main/CLIMain.cpp`), which reads the same save-file XML as the GUI, runs the GA, and prints the best build order (exit 0 = target satisfied, 3 = not satisfied). Requires wxWidgets 3.2 devel packages (on Void: `wxWidgets-common-devel`; CMake finds `wx-config-gtk3`). The headless build defines `SCF_HEADLESS`, which makes `stdafx.h` include wxBase headers only and shim `wxMessageBox` to stderr. `baselines/` holds per-version CLI reference outputs (GA is time-seeded — compare target-reached times, not exact sequences).
+
+If the full wxWidgets is present (on Void: also `wxWidgets-gtk3-devel`), CMake additionally builds `scfusion-gui` — the same MDI app as Windows, on wxGTK. The engine is compiled twice: `scfusion-core` (headless) and `scfusion-core-gui` (without `SCF_HEADLESS`, so `wxMessageBox` is a real dialog). GUI colors follow the OS light/dark theme (`GridOutput.cpp`/`ChartPanel.cpp` keep paired accent palettes); property-grid splitter positions must be set via `CallAfter` because wxGTK sizes windows asynchronously.
+
+### CI
+
+`.github/workflows/ci.yml` runs on every push: a Linux job (CMake build + a 20s GA smoke run per race) and a Windows job that compile-checks `main/SCFusion_vc10.vcxproj` with MSBuild against the official wxWidgets 3.1.7 vc14x binaries + WinSparkle 0.8.1 (downloaded in CI, cached; `wxWidgets/wxwidgets.props` pins the layout — keep it in sync with the workflow if versions change).
 
 ### Windows GUI (Visual Studio)
 

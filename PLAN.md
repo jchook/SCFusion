@@ -1,9 +1,11 @@
 # PLAN: Linux port + StarCraft II 5.0.16 update
 
-> **Status (2026-08-12): Phases 1–5 done.** `cmake -B build && cmake --build build`
-> then `./build/scfusion-cli --versions-dir main/Versions <target.xml>`.
-> See CHANGELOG.md (Unreleased v2.3.0) for what changed and the modeling
-> decisions. Phase 6 (GUI port, TUI, CI, etc.) remains open.
+> **Status (2026-08-12): Phases 1–5 done**, plus two Phase 6 items: the
+> wxGTK GUI runs on Linux (`./build/scfusion-gui`, built automatically when
+> full wxWidgets is installed) and GitHub Actions CI covers a Linux
+> build+smoke and a Windows MSBuild compile check. See CHANGELOG.md
+> (Unreleased v2.3.0). Remaining Phase 6 items (TUI, wx-free core, memory
+> pool profiling, ARM PRNG, Rust) stay open.
 
 Two goals, one critical path:
 
@@ -175,14 +177,16 @@ currently every command has a fixed duration.
 
 ## Phase 6 — Later / optional (not on the critical path)
 
-- [ ] Full GUI on Linux/macOS: link full wxGTK/wxOSX, port `MDIParent`/`MDIChild`
-      (`#ifdef` out WinSparkle; Sparkle on macOS if wanted).
+- [x] Full GUI on Linux: link full wxGTK, port `MDIParent`/`MDIChild`
+      (`#ifdef` out WinSparkle) — done; macOS/wxOSX untested but nothing
+      known to block it.
 - [ ] TUI frontend (FTXUI) over the same core lib.
 - [ ] Strip wx types from SC2 layer (std::string + pugixml) for a truly
       dependency-free core.
 - [ ] Profile on Linux: the custom `MemoryPoolManager` predates modern
       allocators — measure whether it still earns its complexity.
 - [ ] ARM/Apple Silicon: portable PRNG (xoshiro256++), drop SSE requirement.
-- [ ] CI: GitHub Actions running the CLI regression targets on every push.
+- [x] CI: GitHub Actions running the CLI regression targets on every push
+      (plus a Windows MSBuild compile check of the VS project).
 - [ ] Rust rewrite: only after the CLI exists as a parity reference. Separate
       project, separate decision.
