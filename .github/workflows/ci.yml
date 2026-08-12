@@ -58,8 +58,10 @@ jobs:
           $wx = 'https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.7'
           curl.exe -sSL -o wx-headers.7z "$wx/wxWidgets-3.1.7-headers.7z"
           curl.exe -sSL -o wx-dev.7z "$wx/wxMSW-3.1.7_vc14x_Dev.7z"
-          7z x -y wx-headers.7z -owxWidgets
-          7z x -y wx-dev.7z -owxWidgets
+          # The archives ship their own wxwidgets.props; ours (committed) is
+          # the one the vcxproj must see, so keep theirs out of the way.
+          7z x -y wx-headers.7z -owxWidgets '-x!wxwidgets.props'
+          7z x -y wx-dev.7z -owxWidgets '-x!wxwidgets.props'
           curl.exe -sSL -o winsparkle.zip 'https://github.com/vslavik/winsparkle/releases/download/v0.8.1/WinSparkle-0.8.1.zip'
           7z x -y winsparkle.zip
           Move-Item WinSparkle-0.8.1/include WinSparkle/include
